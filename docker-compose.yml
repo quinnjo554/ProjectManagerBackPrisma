@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+   postgres:
+    image: postgres:14
+    ports:
+      - "15432:5432"
+    environment:
+      POSTGRES_DB: projectManager
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: secret
