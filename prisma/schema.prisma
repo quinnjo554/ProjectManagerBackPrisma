@@ -11,79 +11,78 @@ datasource db {
 }
 
 model User {
-  user_id   Int    @id @default(autoincrement())
-  username  String
-  email     String @unique
-  password  String
-  tasks     Task[]    // Add the opposite relation field for Task
-  comments  Comment[] // Add the opposite relation field for Comment
-  img       String
-  description String
-  user_projects UserProject[]  // Add the opposite relation field for UserProject
+  user_id       Int           @id @default(autoincrement())
+  username      String
+  email         String        @unique
+  password      String
+  tasks         Task[] // Add the opposite relation field for Task
+  comments      Comment[] // Add the opposite relation field for Comment
+  img           String
+  description   String
+  user_projects UserProject[] // Add the opposite relation field for UserProject
 }
 
-
 model Project {
-  project_id   Int    @id @default(autoincrement())
-  project_name String
-  description  String?
-  start_date   DateTime
-  end_date     DateTime?
-  tasks        Task[]  // Add the opposite relation field for Task
-  user_projects UserProject[]  // Add the opposite relation field for UserProject
+  project_id    Int           @id @default(autoincrement())
+  project_name  String
+  description   String?
+  start_date    DateTime
+  end_date      DateTime?
+  tasks         Task[] // Add the opposite relation field for Task
+  user_projects UserProject[] // Add the opposite relation field for UserProject
 }
 
 model Task {
-  task_id      Int    @id @default(autoincrement())
-  project_id   Int
-  task_name    String
-  description  String?
-  assignee_id  Int
-  due_date     DateTime?
-  status       String?
-  priority     String?
-  project      Project @relation(fields: [project_id], references: [project_id])
-  assignee     User    @relation(fields: [assignee_id], references: [user_id])
-  comments     Comment[]  // Add the opposite relation field for Comment
-task_labels  TaskLabel[]
+  task_id     Int         @id @default(autoincrement())
+  project_id  Int
+  task_name   String
+  description String?
+  assignee_id Int
+  due_date    DateTime?
+  status      String?
+  priority    String?
+  project     Project     @relation(fields: [project_id], references: [project_id])
+  assignee    User        @relation(fields: [assignee_id], references: [user_id])
+  comments    Comment[] // Add the opposite relation field for Comment
+  task_labels TaskLabel[]
+  userUser_id Int?
 }
 
 model Comment {
-  comment_id    Int    @id @default(autoincrement())
-  task_id       Int
-  user_id       Int
-  comment_text  String
-  created_at    DateTime
-  task          Task @relation(fields: [task_id], references: [task_id])
-  user          User @relation(fields: [user_id], references: [user_id])
+  comment_id   Int      @id @default(autoincrement())
+  task_id      Int
+  user_id      Int
+  comment_text String
+  created_at   DateTime
+  task         Task     @relation(fields: [task_id], references: [task_id])
+  user         User     @relation(fields: [user_id], references: [user_id])
 }
 
 model Label {
-  label_id     Int    @id @default(autoincrement())
-  label_name   String
-task_labels  TaskLabel[]
+  label_id    Int         @id @default(autoincrement())
+  label_name  String
+  task_labels TaskLabel[]
   // Define any additional columns or relationships if needed
   // ...
 }
 
 model UserProject {
-  id         Int   @id @default(autoincrement())
+  id         Int @id @default(autoincrement())
   user_id    Int
   project_id Int
 
   // Define foreign keys
-  user       User @relation(fields: [user_id], references: [user_id])
-  project    Project @relation(fields: [project_id], references: [project_id])
+  user    User    @relation(fields: [user_id], references: [user_id])
+  project Project @relation(fields: [project_id], references: [project_id])
 }
-
 
 model TaskLabel {
   task_id  Int
   label_id Int
 
   // Define foreign keys
-  task      Task @relation(fields: [task_id], references: [task_id])
-  label     Label @relation(fields: [label_id], references: [label_id])
+  task  Task  @relation(fields: [task_id], references: [task_id])
+  label Label @relation(fields: [label_id], references: [label_id])
 
   @@id([task_id, label_id])
 }

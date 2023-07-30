@@ -21,7 +21,7 @@ router.get('/email/:email', async (req, res) => {
   });
   
   // POST create user
-  router.post('/user', async (req, res) => {
+  router.post('/post', async (req, res) => {
     const userRequest = req.body;
     try {
       const user = await userService.createUser(userRequest);
@@ -32,7 +32,7 @@ router.get('/email/:email', async (req, res) => {
   });
   
   // DELETE user by email
-  router.delete('/user/:email', async (req, res) => {
+  router.delete('/delete/:email', async (req, res) => {
     const email = req.params.email;
     try {
       await userService.deleteUserByEmail(email);
