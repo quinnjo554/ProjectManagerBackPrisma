@@ -12,6 +12,7 @@ class ProjectService {
     });
   }
 
+
   async addProject(projectRequest) {
     return this.prisma.project.create({
       data: {
