@@ -1,32 +1,42 @@
-
 class UserService {
-    constructor(prisma) {
-      this.prisma = prisma;
+  constructor(prisma) {
+    this.prisma = prisma;
+  }
+
+  async getUserByEmail(email) {
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      throw new Error("User not found");
     }
-  
-    async getUserByEmail(email) {
-      const user = await this.prisma.user.findUnique({ where: { email } });
-      if (!user) {
-        throw new Error('User not found');
-      }
-      return user;
+    return user;
+  }
+  async getAllUserWithEmail(email) {
+    const users = await this.prisma.user.findMany({
+      where: {
+        email: {
+          contains: email,
+        },
+      },
+    });
+    return users;
+  }
+  async createUser(userRequest) {
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email: userRequest.email },
+    });
+    if (existingUser) {
+      throw new Error("User already exists");
     }
-  
-    async createUser(userRequest) {
-      const existingUser = await this.prisma.user.findUnique({ where: { email: userRequest.email } });
-      if (existingUser) {
-        throw new Error('User already exists');
-      }
-      const user = await this.prisma.user.create({ data: userRequest });
-      return user;
-    }
-  
-    async deleteUserByEmail(email) {
-      const user = await this.prisma.user.findUnique({ where: { email } });
-      if (user) {
-        await this.prisma.user.delete({ where: { user_id: user.user_id } });
-      }
+    const user = await this.prisma.user.create({ data: userRequest });
+    return user;
+  }
+
+  async deleteUserByEmail(email) {
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    if (user) {
+      await this.prisma.user.delete({ where: { user_id: user.user_id } });
     }
   }
-  
-  module.exports = UserService;
+}
+
+module.exports = UserService;
