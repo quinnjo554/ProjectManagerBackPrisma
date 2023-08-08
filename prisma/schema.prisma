@@ -11,15 +11,17 @@ datasource db {
 }
 
 model User {
-  user_id       Int           @id @default(autoincrement())
-  username      String
-  email         String        @unique
-  password      String
-  tasks         Task[] // Add the opposite relation field for Task
-  comments      Comment[] // Add the opposite relation field for Comment
-  img           String
-  description   String
-  user_projects UserProject[] // Add the opposite relation field for UserProject
+  user_id           Int           @id @default(autoincrement())
+  username          String
+  email             String        @unique
+  password          String
+  tasks             Task[] // Add the opposite relation field for Task
+  comments          Comment[] // Add the opposite relation field for Comment
+  img               String
+  description       String
+  user_projects     UserProject[] // Add the opposite relation field for UserProject
+  received_messages Message[]     @relation("Recipient")
+  sent_messages     Message[]     @relation("Sender")
 }
 
 model Project {
@@ -85,4 +87,15 @@ model TaskLabel {
   label Label @relation(fields: [label_id], references: [label_id])
 
   @@id([task_id, label_id])
+}
+
+model Message {
+  message_id   Int      @id @default(autoincrement())
+  sender_id    Int
+  recipient_id Int
+  message_text String
+  sent_at      DateTime @default(now())
+  is_read      Boolean
+  sender       User     @relation("Sender", fields: [sender_id], references: [user_id])
+  recipient    User     @relation("Recipient", fields: [recipient_id], references: [user_id])
 }
